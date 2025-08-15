@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/category_provider.dart';
-import '../models/category_model.dart';
 import 'quiz_screen.dart';
 
 class CategoryScreen extends ConsumerWidget {

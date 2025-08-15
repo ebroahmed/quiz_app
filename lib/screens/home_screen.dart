@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/screens/login_screen.dart';
 import '../providers/auth_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -17,7 +18,9 @@ class HomeScreen extends ConsumerWidget {
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await authRepo.signOut();
-              Navigator.pop(context); // Back to login screen
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) => LoginScreen()),
+              ); // Back to login screen
             },
           ),
         ],

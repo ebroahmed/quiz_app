@@ -16,6 +16,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Quiz App', home: SplashScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Quiz App',
+      home: SplashScreen(),
+    );
   }
 }

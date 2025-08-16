@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiz_app/providers/auth_provider.dart';
+import 'package:quiz_app/screens/leaderboard_screen.dart';
 import '../models/category_model.dart';
 import '../models/question_model.dart';
 import '../providers/question_provider.dart';
@@ -97,6 +98,18 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               });
             },
             child: const Text("Retry"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // close dialog
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => LeaderboardScreen(category: widget.category),
+                ),
+              );
+            },
+            child: const Text("View Leaderboard"),
           ),
         ],
       ),

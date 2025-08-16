@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../repositories/auth_repository.dart';
 
+final passwordVisibilityProvider = StateProvider<bool>((ref) => true);
+
 // Repository provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(FirebaseAuth.instance, FirebaseFirestore.instance);

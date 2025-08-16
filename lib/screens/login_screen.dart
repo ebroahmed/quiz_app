@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/screens/home_screen.dart';
+import 'package:quiz_app/theme/app_background.dart';
 import '../providers/auth_provider.dart';
 import 'signup_screen.dart';
 
@@ -21,71 +22,210 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final authRepo = ref.read(authRepositoryProvider);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: "Email"),
-                validator: (value) => value == null || !value.contains("@")
-                    ? "Enter valid email"
-                    : null,
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+          automaticallyImplyLeading: false,
+          title: Text("Login", style: TextStyle(color: Colors.white)),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight:
+                    MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).viewInsets.bottom,
               ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: "Password"),
-                obscureText: true,
-                validator: (value) => value == null || value.length < 6
-                    ? "Password must be at least 6 characters"
-                    : null,
-              ),
-              const SizedBox(height: 20),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: () async {
-                        if (!_formKey.currentState!.validate()) return;
-                        setState(() => _isLoading = true);
-
-                        try {
-                          await authRepo.signIn(
-                            email: _emailController.text.trim(),
-                            password: _passwordController.text,
-                          );
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const HomeScreen(),
-                            ),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text(e.toString())));
-                        } finally {
-                          setState(() => _isLoading = false);
-                        }
-                      },
-                      child: const Text("Login"),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: 30,
+                        bottom: 20,
+                        left: 20,
+                        right: 20,
+                      ),
+                      width: 200,
+                      child: Image.asset('assets/images/logo.png'),
                     ),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SignUpScreen()),
-                  );
-                },
-                child: const Text("Don't have an account? Sign Up"),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextFormField(
+                            cursorColor: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary,
+                            keyboardType: TextInputType.emailAddress,
+                            style: TextStyle(
+                              decorationColor: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              decorationThickness: 0,
+                            ),
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                  width: 1,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                  width: 2,
+                                ),
+                              ),
+
+                              labelText: "Email",
+                              labelStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            ),
+                            validator: (value) =>
+                                value == null || !value.contains("@")
+                                ? "Enter valid email"
+                                : null,
+                          ),
+                          SizedBox(height: 12),
+                          Consumer(
+                            builder: (context, ref, _) {
+                              final isHidden = ref.watch(
+                                passwordVisibilityProvider,
+                              );
+
+                              return TextFormField(
+                                controller: _passwordController,
+                                cursorColor: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary,
+                                style: TextStyle(
+                                  decorationColor: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                  decorationThickness: 0,
+                                ),
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  labelText: "Password",
+                                  labelStyle: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      isHidden
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                    onPressed: () {
+                                      ref
+                                              .read(
+                                                passwordVisibilityProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          !isHidden;
+                                    },
+                                  ),
+                                ),
+                                obscureText: true,
+                                validator: (value) =>
+                                    value == null || value.length < 6
+                                    ? "Password must be at least 6 characters"
+                                    : null,
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          _isLoading
+                              ? const CircularProgressIndicator()
+                              : ElevatedButton(
+                                  onPressed: () async {
+                                    if (!_formKey.currentState!.validate())
+                                      return;
+                                    setState(() => _isLoading = true);
+
+                                    try {
+                                      await authRepo.signIn(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                      );
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const HomeScreen(),
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(content: Text(e.toString())),
+                                      );
+                                    } finally {
+                                      setState(() => _isLoading = false);
+                                    }
+                                  },
+                                  child: const Text("Login"),
+                                ),
+                          const SizedBox(height: 12),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const SignUpScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text("Don't have an account? Sign Up"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),

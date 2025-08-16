@@ -19,7 +19,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Quiz App',
-      home: SplashScreen(),
+      home: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF330E01), // dark brownish
+              Color(0xFF6A1B09), // reddish brown
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SplashScreen(),
+      ),
     );
   }
 }

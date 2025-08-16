@@ -3,15 +3,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 final theme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
-    seedColor: const Color.fromARGB(230, 51, 14, 1),
+    seedColor: const Color.fromARGB(230, 0, 29, 43),
   ),
-  scaffoldBackgroundColor: Colors.transparent, // make it transparent
 
   appBarTheme: AppBarTheme(
-    titleTextStyle: GoogleFonts.quicksand(fontSize: 20),
+    titleTextStyle: GoogleFonts.nunito(fontSize: 20),
     foregroundColor: Colors.white,
+    backgroundColor: const Color.fromARGB(230, 0, 29, 43),
     elevation: 0,
-    backgroundColor: Colors.transparent, // so gradient shows behind AppBar
+    // so gradient shows behind AppBar
   ),
 
   textTheme: GoogleFonts.interTextTheme(),
@@ -19,6 +19,7 @@ final theme = ThemeData(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       foregroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(230, 0, 29, 43),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
   ),

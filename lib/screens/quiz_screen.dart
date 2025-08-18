@@ -69,7 +69,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Future<void> _saveResult(String? uid, int totalQuestions) async {
     try {
       if (uid != null) {
-        await FirebaseFirestore.instance.collection("quizHistory").add({
+        await FirebaseFirestore.instance.collection("quiz_results").add({
           "userId": uid,
           "categoryId": widget.category.id,
           "score": _score,
@@ -107,15 +107,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       builder: (_) => AlertDialog(
         title: Text(
           "Quiz Completed",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
-          ),
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryFixed),
         ),
         content: Text(
           "Your score: $_score / $totalQuestions",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
-          ),
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryFixed),
         ),
         actions: [
           TextButton(
@@ -126,7 +122,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             child: Text(
               "Back",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                color: Theme.of(context).colorScheme.onPrimaryFixed,
               ),
             ),
           ),
@@ -146,7 +142,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             child: Text(
               "Retry",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                color: Theme.of(context).colorScheme.onPrimaryFixed,
               ),
             ),
           ),

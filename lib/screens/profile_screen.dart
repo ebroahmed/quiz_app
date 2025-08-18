@@ -1,13 +1,22 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/screens/home_screen.dart';
+import 'package:quiz_app/screens/quiz_history_screen.dart';
+import 'package:quiz_app/widgets/main_screen.dart';
 import '../providers/auth_provider.dart';
-import 'quiz_history_screen.dart';
 
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
+  @override
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  int _index = 1;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
 
     return Scaffold(
@@ -53,6 +62,25 @@ class ProfileScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text("Error: $e")),
       ),
+      // bottomNavigationBar: CurvedNavigationBar(
+      //   items: bottomNavItems,
+      //   index: _index,
+      //   backgroundColor: Colors.transparent,
+      //   color: Theme.of(context).colorScheme.onPrimaryFixed, // navbar color
+      //   buttonBackgroundColor: Theme.of(
+      //     context,
+      //   ).colorScheme.onPrimaryFixed, // selected icon bg
+      //   height: 60,
+      //   animationDuration: Duration(milliseconds: 600),
+      //   onTap: (index) {
+      //     setState(() => _index = index);
+      //     if (index == 0) {
+      //       Navigator.of(
+      //         context,
+      //       ).push(MaterialPageRoute(builder: (_) => HomeScreen()));
+      //     }
+      //   },
+      // ),
     );
   }
 }

@@ -1,19 +1,29 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:quiz_app/providers/auth_provider.dart';
 import 'package:quiz_app/screens/login_screen.dart';
+import 'package:quiz_app/screens/profile_screen.dart';
+import 'package:quiz_app/screens/quiz_history_screen.dart';
 import 'package:quiz_app/theme/app_background.dart';
+import 'package:quiz_app/widgets/main_screen.dart';
 import '../providers/category_provider.dart';
 import 'quiz_screen.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
+  @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _index = 0;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final categoriesAsync = ref.watch(categoriesProvider);
     final authRepo = ref.read(authRepositoryProvider);
-
     return AppBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -111,6 +121,25 @@ class HomeScreen extends ConsumerWidget {
           ),
           error: (e, _) => Center(child: Text("Error: $e")),
         ),
+        // bottomNavigationBar: CurvedNavigationBar(
+        //   items: bottomNavItems,
+        //   index: _index,
+        //   backgroundColor: Colors.transparent,
+        //   color: Theme.of(context).colorScheme.onPrimaryFixed, // navbar color
+        //   buttonBackgroundColor: Theme.of(
+        //     context,
+        //   ).colorScheme.onPrimaryFixed, // selected icon bg
+        //   height: 60,
+        //   animationDuration: Duration(milliseconds: 600),
+        //   onTap: (index) {
+        //     setState(() => _index = index);
+        //     if (index == 1) {
+        //       Navigator.of(
+        //         context,
+        //       ).push(MaterialPageRoute(builder: (_) => ProfileScreen()));
+        //     }
+        //   },
+        // ),
       ),
     );
   }

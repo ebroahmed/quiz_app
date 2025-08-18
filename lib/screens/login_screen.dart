@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiz_app/screens/home_screen.dart';
+import 'package:quiz_app/screens/splash_screen.dart';
 import 'package:quiz_app/theme/app_background.dart';
 import '../providers/auth_provider.dart';
 import 'signup_screen.dart';
@@ -170,7 +170,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) => const HomeScreen(),
+                                          builder: (_) => const SplashScreen(),
                                         ),
                                       );
                                     } catch (e) {

@@ -1,9 +1,7 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiz_app/screens/home_screen.dart';
 import 'package:quiz_app/screens/quiz_history_screen.dart';
-import 'package:quiz_app/widgets/main_screen.dart';
+import 'package:quiz_app/theme/app_background.dart';
 import '../providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -19,68 +17,85 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text("Profile")),
-      body: authState.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(child: Text("Not logged in"));
-          }
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 40,
-                  child: Text(user.email![0].toUpperCase()),
+    return AppBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+          automaticallyImplyLeading: false,
+          title: Text(
+            "Profile",
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          ),
+        ),
+        body: authState.when(
+          data: (user) {
+            if (user == null) {
+              return Center(
+                child: Text(
+                  "Not logged in",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
-                const SizedBox(height: 12),
-                Text(user.email ?? "No email"),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => QuizHistoryScreen(userId: user.uid),
+              );
+            }
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 50),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                      foregroundColor: Theme.of(
+                        context,
+                      ).colorScheme.onPrimaryFixedVariant,
+                      radius: 40,
+                      child: Text(
+                        user.email![0].toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    );
-                  },
-                  child: const Text("View Quiz History"),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      user.email ?? "No email",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => QuizHistoryScreen(userId: user.uid),
+                          ),
+                        );
+                      },
+                      child: Text("View Quiz History"),
+                    ),
+                    SizedBox(height: 300),
+                    ElevatedButton.icon(
+                      icon: Icon(Icons.logout_outlined),
+                      onPressed: () async {
+                        await ref.read(authRepositoryProvider).signOut();
+                      },
+                      label: Text("Logout"),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () async {
-                    await ref.read(authRepositoryProvider).signOut();
-                  },
-                  child: const Text("Logout"),
-                ),
-              ],
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text("Error: $e")),
+              ),
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text("Error: $e")),
+        ),
       ),
-      // bottomNavigationBar: CurvedNavigationBar(
-      //   items: bottomNavItems,
-      //   index: _index,
-      //   backgroundColor: Colors.transparent,
-      //   color: Theme.of(context).colorScheme.onPrimaryFixed, // navbar color
-      //   buttonBackgroundColor: Theme.of(
-      //     context,
-      //   ).colorScheme.onPrimaryFixed, // selected icon bg
-      //   height: 60,
-      //   animationDuration: Duration(milliseconds: 600),
-      //   onTap: (index) {
-      //     setState(() => _index = index);
-      //     if (index == 0) {
-      //       Navigator.of(
-      //         context,
-      //       ).push(MaterialPageRoute(builder: (_) => HomeScreen()));
-      //     }
-      //   },
-      // ),
     );
   }
 }

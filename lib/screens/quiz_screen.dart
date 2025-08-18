@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,10 +23,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   int _timeLeft = 15;
   Timer? _timer;
 
-  // UI control
   List<String> _shuffledOptions = [];
-  bool _quizFinished = false; // prevent rebuilding question UI after finish
-  bool _isFinishing = false; // guard against double finish (timer + tap)
+  int? _selectedIndex; // for feedback
+  bool _answered = false; // disable after one answer
 
   @override
   void dispose() {
@@ -35,9 +35,12 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   void _startTimer(List<Question> questions) {
     _timer?.cancel();
-    setState(() => _timeLeft = 15);
+    setState(() {
+      _timeLeft = 15;
+      _selectedIndex = null;
+      _answered = false;
+    });
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!mounted || _quizFinished) return;
       if (_timeLeft > 0) {
         setState(() => _timeLeft--);
       } else {
@@ -51,11 +54,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   }
 
   void _goToNextQuestion(List<Question> questions) {
-    if (_isFinishing) return; // already finishing
     _timer?.cancel();
-
     if (_currentQuestionIndex < questions.length - 1) {
-      if (!mounted) return;
       setState(() {
         _currentQuestionIndex++;
         _shuffleOptions(questions[_currentQuestionIndex]);
@@ -66,85 +66,46 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
   }
 
-  Future<void> _saveResult(String? uid, int totalQuestions) async {
-    try {
-      if (uid != null) {
-        await FirebaseFirestore.instance.collection("quiz_results").add({
-          "userId": uid,
-          "categoryId": widget.category.id,
-          "score": _score,
-          "totalQuestions": totalQuestions,
-          "timestamp": FieldValue.serverTimestamp(),
-        });
-        debugPrint("Score saved to quizHistory");
-      } else {
-        debugPrint("No user logged in; skipping save.");
-      }
-    } catch (e) {
-      debugPrint("Failed to save quizHistory: $e");
-    }
-  }
-
   Future<void> _finishQuiz(int totalQuestions) async {
-    if (_isFinishing) return;
-    _isFinishing = true;
     _timer?.cancel();
 
-    // Mark finished so build() doesn't try to lay out another question UI
-    if (mounted) {
-      setState(() => _quizFinished = true);
+    final authState = ref.read(authStateProvider);
+    final user = authState.value;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection("quiz_results").add({
+        "userId": user.uid,
+        "categoryId": widget.category.id,
+        "score": _score,
+        "totalQuestions": totalQuestions,
+        "timestamp": FieldValue.serverTimestamp(),
+      });
     }
 
-    // Fire-and-forget save (don’t block dialog)
-    final authState = ref.read(authStateProvider);
-    final user = authState.value; // User?
-    _saveResult(user?.uid, totalQuestions);
-
-    if (!mounted) return;
-    await showDialog(
+    // Move to a nicer result screen later, for now keep dialog
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: Text(
-          "Quiz Completed",
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryFixed),
-        ),
-        content: Text(
-          "Your score: $_score / $totalQuestions",
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryFixed),
-        ),
+        title: const Text("Quiz Completed"),
+        content: Text("Your score: $_score / $totalQuestions"),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // close dialog
-              if (mounted) Navigator.pop(context); // back to categories
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
-            child: Text(
-              "Back",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimaryFixed,
-              ),
-            ),
+            child: const Text("Back"),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // close dialog
-              if (!mounted) return;
+              Navigator.pop(context);
               setState(() {
                 _currentQuestionIndex = 0;
                 _score = 0;
-                _timeLeft = 15;
-                _quizFinished = false;
-                _isFinishing = false;
-                _shuffledOptions = [];
+                _shuffledOptions.clear();
               });
             },
-            child: Text(
-              "Retry",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimaryFixed,
-              ),
-            ),
+            child: const Text("Retry"),
           ),
         ],
       ),
@@ -181,18 +142,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               );
             }
 
-            // If finished, keep the UI stable while the dialog is shown.
-            if (_quizFinished) {
-              return Center(
-                child: Text(
-                  "Calculating results...",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-              );
-            }
-
             if (_shuffledOptions.isEmpty) {
               _shuffleOptions(questions[_currentQuestionIndex]);
               _startTimer(questions);
@@ -221,41 +170,88 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                     color: Theme.of(context).colorScheme.onPrimaryFixed,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    question.question,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 18,
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    transitionBuilder: (child, animation) {
+                      return SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(1, 0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      );
+                    },
+                    child: Text(
+                      question.question,
+                      key: ValueKey(_currentQuestionIndex),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  ..._shuffledOptions.map((option) {
+                  ...List.generate(_shuffledOptions.length, (index) {
+                    final option = _shuffledOptions[index];
+                    final correctAnswer =
+                        question.options[question.correctAnswerIndex];
+
+                    Color backgroundColor = Theme.of(
+                      context,
+                    ).colorScheme.onPrimaryFixed;
+                    if (_answered) {
+                      if (index == _selectedIndex) {
+                        backgroundColor = (option == correctAnswer)
+                            ? Colors.green
+                            : Colors.red;
+                      } else if (option == correctAnswer) {
+                        backgroundColor = Colors.green;
+                      } else {
+                        backgroundColor = Theme.of(
+                          context,
+                        ).colorScheme.primaryContainer;
+                      }
+                    }
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_quizFinished || _isFinishing) return;
-                          if (option ==
-                              question.options[question.correctAnswerIndex]) {
-                            _score++;
-                          }
-                          _goToNextQuestion(questions);
-                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            backgroundColor,
+                          ),
+                          foregroundColor: MaterialStateProperty.all(
+                            Colors.white,
+                          ),
+                          minimumSize: MaterialStateProperty.all(
+                            const Size.fromHeight(50),
+                          ),
+                        ),
+                        onPressed: _answered
+                            ? null
+                            : () {
+                                setState(() {
+                                  _selectedIndex = index;
+                                  _answered = true;
+                                  if (option == correctAnswer) {
+                                    _score++;
+                                  }
+                                });
+                                Future.delayed(
+                                  const Duration(seconds: 1),
+                                  () => _goToNextQuestion(questions),
+                                );
+                              },
                         child: Text(option),
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(
-            child: Text(
-              "Error: $e",
-              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-            ),
-          ),
+          error: (e, _) => Center(child: Text("Error: $e")),
         ),
       ),
     );

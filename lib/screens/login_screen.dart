@@ -151,7 +151,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                           SizedBox(height: 20),
                           _isLoading
-                              ? const CircularProgressIndicator()
+                              ? CircularProgressIndicator(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                )
                               : ElevatedButton(
                                   onPressed: () async {
                                     if (!_formKey.currentState!.validate())

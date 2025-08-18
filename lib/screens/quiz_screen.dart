@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiz_app/models/question_model.dart';
 import 'package:quiz_app/providers/auth_provider.dart';
+import 'package:quiz_app/screens/result_screen.dart';
 import 'package:quiz_app/theme/app_background.dart';
 import '../models/category_model.dart';
 import '../providers/question_provider.dart';
@@ -81,33 +82,14 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       });
     }
 
-    // Move to a nicer result screen later, for now keep dialog
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        title: const Text("Quiz Completed"),
-        content: Text("Your score: $_score / $totalQuestions"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: const Text("Back"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              setState(() {
-                _currentQuestionIndex = 0;
-                _score = 0;
-                _shuffledOptions.clear();
-              });
-            },
-            child: const Text("Retry"),
-          ),
-        ],
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultScreen(
+          category: widget.category,
+          score: _score,
+          totalQuestions: totalQuestions,
+        ),
       ),
     );
   }

@@ -28,7 +28,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.onPrimaryFixedVariant,
           automaticallyImplyLeading: false,
-          title: Text("Login", style: TextStyle(color: Colors.white)),
+          title: Text(
+            "Login",
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          ),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -102,80 +105,51 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 : null,
                           ),
                           SizedBox(height: 12),
-                          Consumer(
-                            builder: (context, ref, _) {
-                              final isHidden = ref.watch(
-                                passwordVisibilityProvider,
-                              );
 
-                              return TextFormField(
-                                controller: _passwordController,
-                                cursorColor: Theme.of(
-                                  context,
-                                ).colorScheme.onPrimary,
-                                style: TextStyle(
-                                  decorationColor: Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimary,
+                          TextFormField(
+                            controller: _passwordController,
+                            cursorColor: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary,
+                            style: TextStyle(
+                              decorationColor: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              decorationThickness: 0,
+                            ),
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
                                   color: Theme.of(
                                     context,
                                   ).colorScheme.onPrimary,
-                                  decorationThickness: 0,
+                                  width: 1,
                                 ),
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onPrimary,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onPrimary,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  labelText: "Password",
-                                  labelStyle: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      isHidden
-                                          ? Icons.visibility_off
-                                          : Icons.visibility,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                    onPressed: () {
-                                      ref
-                                              .read(
-                                                passwordVisibilityProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          !isHidden;
-                                    },
-                                  ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                  width: 2,
                                 ),
-                                obscureText: true,
-                                validator: (value) =>
-                                    value == null || value.length < 6
-                                    ? "Password must be at least 6 characters"
-                                    : null,
-                              );
-                            },
+                              ),
+                              labelText: "Password",
+                              labelStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            ),
+                            obscureText: true,
+                            validator: (value) =>
+                                value == null || value.length < 6
+                                ? "Password must be at least 6 characters"
+                                : null,
                           ),
-                          const SizedBox(height: 20),
+
+                          SizedBox(height: 20),
                           _isLoading
                               ? const CircularProgressIndicator()
                               : ElevatedButton(

@@ -207,9 +207,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                       } else if (option == correctAnswer) {
                         backgroundColor = Colors.green;
                       } else {
-                        backgroundColor = Theme.of(
-                          context,
-                        ).colorScheme.primaryContainer;
+                        backgroundColor = Theme.of(context).colorScheme.primary;
                       }
                     }
 
@@ -217,13 +215,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                          backgroundColor: WidgetStateProperty.all(
                             backgroundColor,
                           ),
-                          foregroundColor: MaterialStateProperty.all(
+                          foregroundColor: WidgetStateProperty.all(
                             Colors.white,
                           ),
-                          minimumSize: MaterialStateProperty.all(
+                          minimumSize: WidgetStateProperty.all(
                             const Size.fromHeight(50),
                           ),
                         ),

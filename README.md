@@ -71,7 +71,7 @@ match /quiz_results/{resultId} {
 
 ▶️ Getting Started
 
-1. Clone the repo
+1.Clone the repo
 git clone https://github.com/ebroahmed/quiz_app.git
 cd flutter-quiz-app
 

@@ -72,7 +72,7 @@ match /quiz_results/{resultId} {
 ▶️ Getting Started
 
 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/flutter-quiz-app.git
+git clone https://github.com/ebroahmed/quiz_app.git
 cd flutter-quiz-app
 
 2️. Install dependencies

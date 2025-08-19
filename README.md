@@ -94,6 +94,7 @@ flutter run
 👨‍💻 Author
 
 Developed by Ebrahim Ahmed
+
 📧 [ebrahimahmed804853@gmail.com]
 
 💼 [Github (https://github.com/ebroahmed/)] 

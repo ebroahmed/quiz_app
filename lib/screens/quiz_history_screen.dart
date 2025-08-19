@@ -30,7 +30,9 @@ class QuizHistoryScreen extends ConsumerWidget {
               return Center(
                 child: Text(
                   "No quiz attempts yet.",
+
                   style: TextStyle(
+                    fontSize: 17,
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
@@ -74,7 +76,11 @@ class QuizHistoryScreen extends ConsumerWidget {
               },
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
           error: (e, _) => Center(child: Text("Error: $e")),
         ),
       ),

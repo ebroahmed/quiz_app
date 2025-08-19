@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiz_app/screens/login_screen.dart';
 import 'package:quiz_app/theme/app_background.dart';
 import '../providers/auth_provider.dart';
 
@@ -237,9 +238,22 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                         email: _emailController.text.trim(),
                                         password: _passwordController.text,
                                       );
-                                      Navigator.pop(
-                                        context,
-                                      ); // Back to login screen
+                                      if (mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: const Text(
+                                              'Account created. Please login',
+                                            ),
+                                          ),
+                                        );
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (ctx) => LoginScreen(),
+                                          ),
+                                        );
+                                      }
                                     } catch (e) {
                                       ScaffoldMessenger.of(
                                         context,
@@ -252,6 +266,17 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                   },
                                   child: const Text("Sign Up"),
                                 ),
+                          SizedBox(height: 12),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (ctx) => LoginScreen(),
+                                ),
+                              );
+                            },
+                            child: Text('Already have an account? Login'),
+                          ),
                         ],
                       ),
                     ),

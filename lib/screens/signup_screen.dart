@@ -94,7 +94,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                   width: 2,
                                 ),
                               ),
-
+                              prefixIcon: Icon(
+                                Icons.person_outline,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                               labelText: "Name",
                               labelStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
@@ -137,7 +140,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                   width: 2,
                                 ),
                               ),
-
+                              prefixIcon: Icon(
+                                Icons.email_outlined,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                               labelText: "Email",
                               labelStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
@@ -161,6 +167,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                               decorationThickness: 0,
                             ),
                             controller: _passwordController,
+                            obscureText: !_isPasswordVisible,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -185,8 +192,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                               labelStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
                               ),
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                               suffixIcon: IconButton(
                                 icon: Icon(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
                                   _isPasswordVisible
                                       ? Icons.visibility
                                       : Icons.visibility_off,
@@ -198,7 +212,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 },
                               ),
                             ),
-                            obscureText: true,
+
                             validator: (value) =>
                                 value == null || value.length < 6
                                 ? "Password must be at least 6 characters"

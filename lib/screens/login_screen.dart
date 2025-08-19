@@ -94,7 +94,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   width: 2,
                                 ),
                               ),
-
+                              prefixIcon: Icon(
+                                Icons.email_outlined,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                               labelText: "Email",
                               labelStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
@@ -119,6 +122,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               color: Theme.of(context).colorScheme.onPrimary,
                               decorationThickness: 0,
                             ),
+                            obscureText: !_isPasswordVisible,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -142,8 +146,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               labelStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
                               ),
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                               suffixIcon: IconButton(
                                 icon: Icon(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
                                   _isPasswordVisible
                                       ? Icons.visibility
                                       : Icons.visibility_off,
@@ -156,7 +167,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                             ),
 
-                            obscureText: true,
                             validator: (value) =>
                                 value == null || value.length < 6
                                 ? "Password must be at least 6 characters"

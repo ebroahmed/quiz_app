@@ -11,8 +11,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  int _index = 1;
-
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);

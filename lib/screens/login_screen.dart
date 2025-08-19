@@ -17,6 +17,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +142,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               labelStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary,
                               ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
+                              ),
                             ),
+
                             obscureText: true,
                             validator: (value) =>
                                 value == null || value.length < 6

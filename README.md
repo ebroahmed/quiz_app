@@ -53,6 +53,7 @@ lib/
 
 
 🔒 Firestore Security Rules (Simplified)
+
 match /users/{userId} {
   allow read, create, update: if request.auth.uid == userId;
 }

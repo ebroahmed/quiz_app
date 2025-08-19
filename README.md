@@ -88,7 +88,7 @@ Enable Firestore Database
 
 Add your google-services.json (Android) and GoogleService-Info.plist (iOS)
 
-4️⃣ Run the app
+4️. Run the app
 flutter run
 
 👨‍💻 Author

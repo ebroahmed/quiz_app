@@ -45,7 +45,7 @@ lib/
   <h3>Quiz Screen</h3>
 <img src="assets/screenshots/quiz.jpg" width="300" height="600"/>
 
-  <h3>Quiz Screen</h3>
+  <h3>Result Screen</h3>
 <img src="assets/screenshots/result.jpg" width="300" height="600"/>
 
   <h3>Profile Screen</h3>
